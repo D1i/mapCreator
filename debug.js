@@ -24,7 +24,7 @@ class C_DEBUG {
         this._FUNC = {
             SHOW_CHUNC: () => {
                 chunkList.forEach(( chunk, index ) => {
-                    createObject(chunk.to.x - chunkSize, chunk.to.y - chunkSize, chunkSize, chunkSize, `rgba(${index * Math.random() * 50}, ${index * Math.random() * 50}, ${index * Math.random() * 50}, 0.1)`, 'chunk');
+                    createObject(chunk.to.x - chunkSize, chunk.to.y - chunkSize, chunkSize, chunkSize, "#fff0", 'chunk');
                 })
             },
             RERENDER: () => {

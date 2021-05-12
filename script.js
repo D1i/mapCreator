@@ -109,6 +109,8 @@ class Object {
         elem.style.backgroundColor = `${this.color}`;
         if (this.type === 'chunk') {
             elem.style.zIndex = -1;
+            elem.style.border = 'solid 1px #000';
+            elem.style.boxSizing = 'border-box';
         }
         return elem;
     }
