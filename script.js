@@ -37,31 +37,6 @@ const moveScreen = ( e ) => {
     screenPosition.y += e.movementY * ( 100 / screenPosition.scale );
 }
 
-screen.addEventListener( 'mousedown', () => {
-    screen.addEventListener( "mousemove", moveScreen, false )
-} );
-screen.addEventListener( 'mouseup', () => {
-    screen.removeEventListener( 'mousemove', moveScreen, false );
-} );
-screen.addEventListener( 'mouseleave', () => {
-    screen.removeEventListener( 'mousemove', moveScreen, false );
-} )
-
-screen.addEventListener( "wheel", ( e ) => {
-    if ( e.deltaY === -100 ) {
-        screenPosition.scale += screenPosition.scale > 5 ? 1 : 0.05;
-    } else {
-        screenPosition.scale -= screenPosition.scale > 5 ? 1 : 0.05;
-        if ( screenPosition.scale <= 0 ) screenPosition.scale = 0.01;
-    }
-} )
-
-window.addEventListener( 'resize', () => {
-    screenSize.width = window.innerWidth;
-    screenSize.height = window.innerHeight;
-    screenPosition.scale = Math.floor( ( screenSize.width + screenSize.height ) / 100 );
-} )
-
 class Chunk {
     constructor( neighboringChunk, directionCreated ) {
         this.from = { x: 0, y: 0 };
@@ -225,6 +200,21 @@ function createObject( x, y, width, height, color, type ) {
     }
 }
 
+function loadingInfSTRING( func, text, isClear ) {
+    if ( isClear ) console.clear();
+    console.log( `начало ${text}` )
+    func();
+    console.log( `успешное окончание ${text}` )
+}
+
+function loadingInfFUNCTIONS( func, startCall, callout ) {
+    const state = {};
+    startCall( state );
+    func();
+    callout( state );
+}
+
+//INITS
 
 function addCalibrationDrawing() {
     createObject( 0, 0, 100, 100, '#F00', 'test' );
@@ -238,20 +228,71 @@ function addCalibrationDrawing() {
     createObject( 500, -500, 10, 10, '#00F', 'test' );
 }
 
-chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
-chunkList.push( new Chunk( chunkList[0], 'top' ) );//1
-chunkList.push( new Chunk( chunkList[0], 'left' ) );//2
-chunkList.push( new Chunk( chunkList[0], 'bottom' ) );//3
-chunkList.push( new Chunk( chunkList[0], 'right' ) );//4
-chunkList.push( new Chunk( chunkList[4], 'bottom' ) );//5
-chunkList.push( new Chunk( chunkList[4], 'top' ) );//6
-chunkList.push( new Chunk( chunkList[2], 'bottom' ) );//7
-chunkList.push( new Chunk( chunkList[2], 'top' ) );//8
+function addCalibrationChunks() {
+    chunkList.push( new Chunk( chunkList[0], 'top' ) );   //1
+    chunkList.push( new Chunk( chunkList[0], 'left' ) );  //2
+    chunkList.push( new Chunk( chunkList[0], 'bottom' ) );//3
+    chunkList.push( new Chunk( chunkList[0], 'right' ) ); //4
+    chunkList.push( new Chunk( chunkList[4], 'bottom' ) );//5
+    chunkList.push( new Chunk( chunkList[4], 'top' ) );   //6
+    chunkList.push( new Chunk( chunkList[2], 'bottom' ) );//7
+    chunkList.push( new Chunk( chunkList[2], 'top' ) );   //8
+}
 
-addCalibrationDrawing();
+function addingEvents() {
+    screen.addEventListener( 'mousedown', () => {
+        screen.addEventListener( "mousemove", moveScreen, false )
+    } );
 
-setInterval( visualistationSystem, 15 );
+    screen.addEventListener( 'mouseup', () => {
+        screen.removeEventListener( 'mousemove', moveScreen, false );
+    } );
 
-//UI
+    screen.addEventListener( 'mouseleave', () => {
+        screen.removeEventListener( 'mousemove', moveScreen, false );
+    } )
 
-createObject( 0, 0, 5, 5, '#0005', 'fixed on screen NO SCALE' );
+    screen.addEventListener( "wheel", ( e ) => {
+        if ( e.deltaY === -100 ) {
+            screenPosition.scale += screenPosition.scale > 5 ? 1 : 0.05;
+        } else {
+            screenPosition.scale -= screenPosition.scale > 5 ? 1 : 0.05;
+            if ( screenPosition.scale <= 0 ) screenPosition.scale = 0.01;
+        }
+    } )
+
+    window.addEventListener( 'resize', () => {
+        screenSize.width = window.innerWidth;
+        screenSize.height = window.innerHeight;
+        screenPosition.scale = Math.floor( ( screenSize.width + screenSize.height ) / 100 );
+    } )
+}
+
+function initFirstChunks() {
+    chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
+}
+
+function addingCalibrationParams() {
+    addCalibrationDrawing();
+    addCalibrationChunks();
+}
+
+function initIntervalForRerender() {
+    setInterval( visualistationSystem, 15 );
+}
+
+function addingUI() {
+    createObject( 0, 0, 5, 5, '#0005', 'fixed on screen NO SCALE' );
+
+}
+
+function initClientApp() {
+    loadingInfSTRING( addingEvents, 'добавления событий' );
+    loadingInfSTRING( initFirstChunks, 'инициализации чанков' );
+    loadingInfSTRING( addingCalibrationParams, 'добавления калибровочных параметров' );
+    loadingInfSTRING( initIntervalForRerender, 'инициализации таймера ререндера' );
+    loadingInfSTRING( addingUI, 'добавления UI' );
+    console.clear();
+}
+
+loadingInfSTRING( initClientApp, 'инициализации событий', true );
