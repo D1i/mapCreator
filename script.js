@@ -15,7 +15,7 @@ const screenSize = {
 const screenPosition = {
     x: 0,
     y: 0,
-    scale: (screenSize.width + screenSize.height) / 20
+    scale: ( screenSize.width + screenSize.height ) / 100
 }
 
 const chunkList = []
@@ -45,21 +45,22 @@ screen.addEventListener( 'mouseup', () => {
 } );
 screen.addEventListener( 'mouseleave', () => {
     screen.removeEventListener( 'mousemove', moveScreen, false );
-})
+} )
 
 screen.addEventListener( "wheel", ( e ) => {
     if ( e.deltaY === -100 ) {
-        screenPosition.scale += 5;
+        screenPosition.scale += screenPosition.scale > 5 ? 1 : 0.05;
     } else {
-        screenPosition.scale -= screenPosition.scale !== 5 ? 5 : 0;
+        screenPosition.scale -= screenPosition.scale > 5 ? 1 : 0.05;
+        if ( screenPosition.scale <= 0 ) screenPosition.scale = 0.01;
     }
 } )
 
 window.addEventListener( 'resize', () => {
     screenSize.width = window.innerWidth;
     screenSize.height = window.innerHeight;
-    screenPosition.scale = Math.floor((screenSize.width + screenSize.height) / 20);
-})
+    screenPosition.scale = Math.floor( ( screenSize.width + screenSize.height ) / 100 );
+} )
 
 class Chunk {
     constructor( neighboringChunk, directionCreated ) {
@@ -92,7 +93,7 @@ class Chunk {
 
     directionCreatedBottom = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x , y: neighboringChunk.to.y - chunkSize };
+        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - chunkSize };
     }
 
     directionCreatedRight = ( neighboringChunk ) => {
@@ -121,8 +122,8 @@ class Object {
         const elem = document.createElement( 'div' );
         elem.style.position = `absolute`;
         elem.style.backgroundColor = `${this.color}`;
-        if (this.type === 'chunk') {
-            elem.style.zIndex = -1;
+        if ( this.type === 'chunk' ) {
+            elem.style.zIndex = '-1';
             elem.style.border = 'solid 1px #000';
             elem.style.boxSizing = 'border-box';
         }
@@ -138,13 +139,14 @@ class Object {
     }
 
     rerenderElem = () => {
-        if (this.type === 'fixed on screen NO SCALE') {
+        if ( this.type === 'fixed on screen NO SCALE' ) {
             this.elem.style.left = `${screenSize.width / 2 + this.x}px`;
             this.elem.style.bottom = `${screenSize.height / 2 + this.y}px`;
             this.elem.style.width = `${this.width}px`;
             this.elem.style.height = `${this.height}px`;
             return;
-        };
+        }
+        ;
         this.elem.style.left = `${screenSize.width / 2 + ( -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.bottom = `${screenSize.height / 2 + ( -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.width = `${this.width * ( screenPosition.scale / 100 )}px`;
@@ -158,13 +160,13 @@ function visualistationSystem() {
             object.rerenderElem();
         } );
     } );
-    chunkListVisualisation.forEach((chunk) => {
+    chunkListVisualisation.forEach( ( chunk ) => {
         chunk.rerenderElem();
-    });
+    } );
 }
 
-function createObject(x, y, width, height, color, type) {
-    if (type === 'chunk') {
+function createObject( x, y, width, height, color, type ) {
+    if ( type === 'chunk' ) {
         const obj = new Object( x, y, width, height, color, 'chunk' );
         obj.createElem();
         obj.showElem();
