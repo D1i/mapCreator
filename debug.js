@@ -23,9 +23,8 @@ class C_DEBUG {
         },
         this._FUNC = {
             SHOW_CHUNC: () => {
-                chunkList.forEach(( i ) => {
-                    console.log(i.to.x - chunkSize, i.to.y - chunkSize);
-                    createObject(i.to.x - chunkSize, i.to.y - chunkSize, chunkSize, chunkSize, `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.1)`, 'visualisation chunk');
+                chunkList.forEach(( chunk, index ) => {
+                    createObject(chunk.to.x - chunkSize, chunk.to.y - chunkSize, chunkSize, chunkSize, `rgba(${index * Math.random() * 50}, ${index * Math.random() * 50}, ${index * Math.random() * 50}, 0.1)`, 'chunk');
                 })
             },
             RERENDER: () => {

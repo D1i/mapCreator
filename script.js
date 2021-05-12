@@ -15,6 +15,8 @@ const screenPosition = {
 
 const chunkList = []
 
+const chunkListVisualisation = []
+
 let coardinatsStartEvent = 0;
 
 const directionalEffect = ( z, number ) => {
@@ -105,6 +107,9 @@ class Object {
         const elem = document.createElement( 'div' );
         elem.style.position = `absolute`;
         elem.style.backgroundColor = `${this.color}`;
+        if (this.type === 'chunk') {
+            elem.style.zIndex = -1;
+        }
         return elem;
     }
 
@@ -130,20 +135,34 @@ function visualistationSystem() {
             object.rerenderElem();
         } );
     } );
+    chunkListVisualisation.forEach((chunk) => {
+        chunk.rerenderElem();
+    });
 }
 
 function createObject(x, y, width, height, color, type) {
-    const obj = new Object( x, y, width, height, color, type );
-    obj.createElem();
-    obj.showElem();
-    chunkList[0].addObject( obj );
+    if (type === 'chunk') {
+        const obj = new Object( x, y, width, height, color, 'chunk' );
+        obj.createElem();
+        obj.showElem();
+        chunkListVisualisation.push( obj );
+    } else {
+        const obj = new Object( x, y, width, height, color, type );
+        obj.createElem();
+        obj.showElem();
+        chunkList[0].addObject( obj );
+    }
 }
 
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
-chunkList.push( new Chunk( chunkList[0], 'top' ) );
-chunkList.push( new Chunk( chunkList[1], 'top' ) );
-chunkList.push( new Chunk( chunkList[1], 'right' ) );
-chunkList.push( new Chunk( chunkList[1], 'left' ) );
+chunkList.push( new Chunk( chunkList[0], 'top' ) );//1
+chunkList.push( new Chunk( chunkList[0], 'left' ) );//2
+chunkList.push( new Chunk( chunkList[0], 'bottom' ) );//3
+chunkList.push( new Chunk( chunkList[0], 'right' ) );//4
+chunkList.push( new Chunk( chunkList[4], 'bottom' ) );//5
+chunkList.push( new Chunk( chunkList[4], 'top' ) );//6
+chunkList.push( new Chunk( chunkList[2], 'bottom' ) );//7
+chunkList.push( new Chunk( chunkList[2], 'top' ) );//8
 
 createObject( 0, 0, 20, 20, '#F00', 'test' );
 createObject( 250, 250, 20, 20, '#0F0', 'test' );
