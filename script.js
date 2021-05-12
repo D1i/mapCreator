@@ -43,6 +43,9 @@ screen.addEventListener( 'mousedown', () => {
 screen.addEventListener( 'mouseup', () => {
     screen.removeEventListener( 'mousemove', moveScreen, false );
 } );
+screen.addEventListener( 'mouseleave', () => {
+    screen.removeEventListener( 'mousemove', moveScreen, false );
+})
 
 screen.addEventListener( "wheel", ( e ) => {
     if ( e.deltaY === -100 ) {
