@@ -55,9 +55,9 @@ class Chunk {
             this.directionCreatedTop( neighboringChunk );
         } else if ( directionCreated === 'left' ) {
             this.directionCreatedLeft( neighboringChunk );
-        } else if ( directionCreated === 'left' ) {
+        } else if ( directionCreated === 'bottom' ) {
             this.directionCreatedBottom( neighboringChunk );
-        } else if ( directionCreated === 'left' ) {
+        } else if ( directionCreated === 'right' ) {
             this.directionCreatedRight( neighboringChunk );
         } else if ( directionCreated !== 'init chunk' ) {
             return;
@@ -70,18 +70,18 @@ class Chunk {
     }
 
     directionCreatedLeft = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - chunkSize };
+        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
+        this.to = { x: neighboringChunk.to.x - chunkSize, y: neighboringChunk.to.y };
     }
 
     directionCreatedBottom = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y - chunkSize };
+        this.to = { x: neighboringChunk.to.x , y: neighboringChunk.to.y - chunkSize };
     }
 
     directionCreatedRight = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y + chunkSize };
+        this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y };
     }
 
     addObject = ( object ) => {
@@ -142,6 +142,8 @@ function createObject(x, y, width, height, color, type) {
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
 chunkList.push( new Chunk( chunkList[0], 'top' ) );
 chunkList.push( new Chunk( chunkList[1], 'top' ) );
+chunkList.push( new Chunk( chunkList[1], 'right' ) );
+chunkList.push( new Chunk( chunkList[1], 'left' ) );
 
 createObject( 0, 0, 20, 20, '#F00', 'test' );
 createObject( 250, 250, 20, 20, '#0F0', 'test' );
