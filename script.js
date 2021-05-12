@@ -13,6 +13,11 @@ const screenPosition = {
     scale: 100
 }
 
+const screenSize = {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
+
 const chunkList = []
 
 const chunkListVisualisation = []
@@ -93,8 +98,8 @@ class Chunk {
 
 class Object {
     constructor( x, y, width, height, color, type ) {
-        this.x = x;
-        this.y = y;
+        this.x = x - width / 2;
+        this.y = y - height / 2;
         this.width = width;
         this.height = height;
         this.color = color;
@@ -124,8 +129,8 @@ class Object {
     }
 
     rerenderElem = () => {
-        this.elem.style.left = `${( -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
-        this.elem.style.bottom = `${( -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
+        this.elem.style.left = `${(screenSize.width / 2 + -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
+        this.elem.style.bottom = `${(screenSize.height / 2 + -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.width = `${this.width * ( screenPosition.scale / 100 )}px`;
         this.elem.style.height = `${this.height * ( screenPosition.scale / 100 )}px`;
     }
@@ -156,6 +161,19 @@ function createObject(x, y, width, height, color, type) {
     }
 }
 
+
+function addCalibrationDrawing() {
+    createObject( 0, 0, 100, 100, '#F00', 'test' );
+    createObject( 250, 250, 50, 50, '#0F0', 'test' );
+    createObject( 500, 500, 10, 10, '#00F', 'test' );
+    createObject( -250, 250, 50, 50, '#0F0', 'test' );
+    createObject( -500, 500, 10, 10, '#00F', 'test' );
+    createObject( -250, -250, 50, 50, '#0F0', 'test' );
+    createObject( -500, -500, 10, 10, '#00F', 'test' );
+    createObject( 250, -250, 50, 50, '#0F0', 'test' );
+    createObject( 500, -500, 10, 10, '#00F', 'test' );
+}
+
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
 chunkList.push( new Chunk( chunkList[0], 'top' ) );//1
 chunkList.push( new Chunk( chunkList[0], 'left' ) );//2
@@ -166,8 +184,6 @@ chunkList.push( new Chunk( chunkList[4], 'top' ) );//6
 chunkList.push( new Chunk( chunkList[2], 'bottom' ) );//7
 chunkList.push( new Chunk( chunkList[2], 'top' ) );//8
 
-createObject( 0, 0, 20, 20, '#F00', 'test' );
-createObject( 250, 250, 20, 20, '#0F0', 'test' );
-createObject( 480, 480, 20, 20, '#00F', 'test' );
+addCalibrationDrawing();
 
 setInterval( visualistationSystem, 15 );
