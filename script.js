@@ -129,13 +129,13 @@ class Chunk {
     }
 
     directionCreatedTop = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.from.x , y: neighboringChunk.from.y + chunkSize };
+        this.from = { x: neighboringChunk.from.x, y: neighboringChunk.from.y + chunkSize };
         this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y + chunkSize };
     }
 
     directionCreatedLeft = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.from.x - chunkSize, y: neighboringChunk.from.y };
-        this.to = { x: neighboringChunk.to.x - chunkSize , y: neighboringChunk.to.y };
+        this.to = { x: neighboringChunk.to.x - chunkSize, y: neighboringChunk.to.y };
     }
 
     directionCreatedBottom = ( neighboringChunk ) => {
