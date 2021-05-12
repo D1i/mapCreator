@@ -23,9 +23,9 @@ class C_DEBUG {
                 IS_INIT: false
             },
             this._FUNC = {
-                SHOW_CHUNC: () => {
+                SHOW_CHUNK: () => {
                     chunkList.forEach( ( chunk, index ) => {
-                        createObject( chunk.to.x - chunkSize, chunk.to.y - chunkSize, chunkSize, chunkSize, "#fff0", 'chunk' );
+                        createObject( chunk.from.x + chunkSize / 2, chunk.from.y + chunkSize / 2, chunkSize, chunkSize, "#fff0", 'chunk' );
                     } )
                 },
                 RERENDER: () => {
@@ -109,6 +109,6 @@ const DEBUG = new C_DEBUG();
 
 DEBUG._FUNC.INIT_DEBG_SCREEN();
 
-DEBUG._FUNC.SHOW_CHUNC();
+DEBUG._FUNC.SHOW_CHUNK();
 
 setInterval( DEBUG._FUNC.RERENDER, 100 );

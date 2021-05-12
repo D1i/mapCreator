@@ -77,27 +77,74 @@ class Chunk {
         } else if ( directionCreated === 'right' ) {
             this.directionCreatedRight( neighboringChunk );
         } else if ( directionCreated !== 'init chunk' ) {
+            console.log( 'ERROR CHUNK' )
             return;
         }
+
+        if ( neighboringChunk === 'init chunk' ) {
+            neighboringChunk = {};
+            neighboringChunk.from = { x: '-', y: '-' }
+            neighboringChunk.to = { x: '-', y: '-' }
+        }
+
+        //IS DEBUG MODE
+        // console.log( `
+        //
+        //
+        //
+        // ++++++++++++++++++++++++++++++++++++++
+        //                 X: ${neighboringChunk.to.x} Y: ${neighboringChunk.to.y}
+        // ---------------0
+        // |              |
+        // |              |
+        // |              |
+        // |              |
+        // |              |
+        // 0---------------
+        // X: ${neighboringChunk.from.x} Y: ${neighboringChunk.from.y}
+        //
+        //
+        //
+        // ======================================
+        // TYPE: ${directionCreated}
+        // ======================================
+        //
+        //
+        //
+        //                 X: ${this.to.x} Y: ${this.to.y}
+        // ---------------0
+        // |              |
+        // |              |
+        // |              |
+        // |              |
+        // |              |
+        // 0---------------
+        // X: ${this.from.x} Y: ${this.from.y}
+        // ++++++++++++++++++++++++++++++++++++++
+        //
+        //
+        //
+        // ` )
+
     }
 
     directionCreatedTop = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
+        this.from = { x: neighboringChunk.from.x , y: neighboringChunk.from.y + chunkSize };
         this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y + chunkSize };
     }
 
     directionCreatedLeft = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x - chunkSize, y: neighboringChunk.to.y };
+        this.from = { x: neighboringChunk.from.x - chunkSize, y: neighboringChunk.from.y };
+        this.to = { x: neighboringChunk.to.x - chunkSize , y: neighboringChunk.to.y };
     }
 
     directionCreatedBottom = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
+        this.from = { x: neighboringChunk.from.x, y: neighboringChunk.from.y - chunkSize };
         this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - chunkSize };
     }
 
     directionCreatedRight = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
+        this.from = { x: neighboringChunk.from.x + chunkSize, y: neighboringChunk.from.y };
         this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y };
     }
 
@@ -146,7 +193,6 @@ class Object {
             this.elem.style.height = `${this.height}px`;
             return;
         }
-        ;
         this.elem.style.left = `${screenSize.width / 2 + ( -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.bottom = `${screenSize.height / 2 + ( -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.width = `${this.width * ( screenPosition.scale / 100 )}px`;
