@@ -38,14 +38,10 @@ screen.addEventListener( 'mouseup', () => {
 } );
 
 screen.addEventListener( "wheel", ( e ) => {
-    const radian = 180 / Math.PI;
-    console.log( Math.abs(( Math.sin( Math.sqrt( ( Math.pow( window.innerHeight - e.clientY, 2 ) + ( Math.pow( e.clientX, 2 ) ) ) ) / e.clientX ) * 180 ) / Math.PI) );
     if ( e.deltaY === -100 ) {
-        screenPosition.scale += 10;
-        screenPosition.x -= 10;
-        screenPosition.y -= 10;
+        screenPosition.scale += 5;
     } else {
-        screenPosition.scale -= 10;
+        screenPosition.scale -= screenPosition.scale !== 5 ? 5 : 0;
     }
 } )
 
@@ -94,12 +90,12 @@ class Chunk {
 }
 
 class Object {
-    constructor( x, y, width, height, type ) {
+    constructor( x, y, width, height, color, type ) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = '#F00';
+        this.color = color;
         this.texture = '';
         this.type = type;
         this.elem = this.createElem();
@@ -136,13 +132,17 @@ function visualistationSystem() {
     } );
 }
 
+function createObject(x, y, width, height, color, type) {
+    const obj = new Object( x, y, width, height, color, type );
+    obj.createElem();
+    obj.showElem();
+    chunkList[0].addObject( obj );
+}
+
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
 
-const testObjcet = new Object( 250, 250, 20, 20, 'test' );
-
-testObjcet.createElem();
-testObjcet.showElem();
-
-chunkList[0].addObject( testObjcet );
+createObject( 0, 0, 20, 20, '#F00', 'test' );
+createObject( 250, 250, 20, 20, '#0F0', 'test' );
+createObject( 500, 500, 20, 20, '#00F', 'test' );
 
 setInterval( visualistationSystem, 15 );
