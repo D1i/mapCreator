@@ -7,15 +7,15 @@ const globalPosition = {
     y: 0
 }
 
-const screenPosition = {
-    x: 0,
-    y: 0,
-    scale: 100
-}
-
 const screenSize = {
     width: window.innerWidth,
     height: window.innerHeight
+}
+
+const screenPosition = {
+    x: 0,
+    y: 0,
+    scale: (screenSize.width + screenSize.height) / 20
 }
 
 const chunkList = []
@@ -54,6 +54,12 @@ screen.addEventListener( "wheel", ( e ) => {
         screenPosition.scale -= screenPosition.scale !== 5 ? 5 : 0;
     }
 } )
+
+window.addEventListener( 'resize', () => {
+    screenSize.width = window.innerWidth;
+    screenSize.height = window.innerHeight;
+    screenPosition.scale = Math.floor((screenSize.width + screenSize.height) / 20);
+})
 
 class Chunk {
     constructor( neighboringChunk, directionCreated ) {
@@ -132,8 +138,15 @@ class Object {
     }
 
     rerenderElem = () => {
-        this.elem.style.left = `${(screenSize.width / 2 + -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
-        this.elem.style.bottom = `${(screenSize.height / 2 + -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
+        if (this.type === 'fixed on screen NO SCALE') {
+            this.elem.style.left = `${screenSize.width / 2 + this.x}px`;
+            this.elem.style.bottom = `${screenSize.height / 2 + this.y}px`;
+            this.elem.style.width = `${this.width}px`;
+            this.elem.style.height = `${this.height}px`;
+            return;
+        };
+        this.elem.style.left = `${screenSize.width / 2 + ( -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
+        this.elem.style.bottom = `${screenSize.height / 2 + ( -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.width = `${this.width * ( screenPosition.scale / 100 )}px`;
         this.elem.style.height = `${this.height * ( screenPosition.scale / 100 )}px`;
     }
@@ -190,3 +203,7 @@ chunkList.push( new Chunk( chunkList[2], 'top' ) );//8
 addCalibrationDrawing();
 
 setInterval( visualistationSystem, 15 );
+
+//UI
+
+createObject( 0, 0, 5, 5, '#0005', 'fixed on screen NO SCALE' );
