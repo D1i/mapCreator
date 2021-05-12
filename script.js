@@ -26,8 +26,8 @@ const directionalEffect = ( z, number ) => {
 }
 
 const moveScreen = ( e ) => {
-    screenPosition.x += e.movementX * ( 100 / screenPosition.scale );
-    screenPosition.y -= e.movementY * ( 100 / screenPosition.scale );
+    screenPosition.x -= e.movementX * ( 100 / screenPosition.scale );
+    screenPosition.y += e.movementY * ( 100 / screenPosition.scale );
 }
 
 screen.addEventListener( 'mousedown', () => {
@@ -47,6 +47,10 @@ screen.addEventListener( "wheel", ( e ) => {
 
 class Chunk {
     constructor( neighboringChunk, directionCreated ) {
+        this.from = { x: 0, y: 0 };
+        this.to = { x: chunkSize, y: chunkSize };
+        this.objectList = [];
+
         if ( directionCreated === 'top' ) {
             this.directionCreatedTop( neighboringChunk );
         } else if ( directionCreated === 'left' ) {
@@ -58,30 +62,26 @@ class Chunk {
         } else if ( directionCreated !== 'init chunk' ) {
             return;
         }
-
-        this.from = { x: 0, y: 0 };
-        this.to = { x: 500, y: 500 };
-        this.objectList = [];
     }
 
     directionCreatedTop = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y + 500 };
+        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y + chunkSize };
     }
 
     directionCreatedLeft = ( neighboringChunk ) => {
-        this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x - 500, y: neighboringChunk.to.y };
+        this.from = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y };
+        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - chunkSize };
     }
 
     directionCreatedBottom = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - 500 };
+        this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y - chunkSize };
     }
 
     directionCreatedRight = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.to.x, y: neighboringChunk.to.y };
-        this.to = { x: neighboringChunk.to.x + 500, y: neighboringChunk.to.y };
+        this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y + chunkSize };
     }
 
     addObject = ( object ) => {
@@ -117,8 +117,8 @@ class Object {
     }
 
     rerenderElem = () => {
-        this.elem.style.left = `${( screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
-        this.elem.style.bottom = `${( screenPosition.y + this.x ) * ( screenPosition.scale / 100 )}px`;
+        this.elem.style.left = `${( -screenPosition.x + this.x ) * ( screenPosition.scale / 100 )}px`;
+        this.elem.style.bottom = `${( -screenPosition.y + this.y ) * ( screenPosition.scale / 100 )}px`;
         this.elem.style.width = `${this.width * ( screenPosition.scale / 100 )}px`;
         this.elem.style.height = `${this.height * ( screenPosition.scale / 100 )}px`;
     }
@@ -140,9 +140,11 @@ function createObject(x, y, width, height, color, type) {
 }
 
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
+chunkList.push( new Chunk( chunkList[0], 'top' ) );
+chunkList.push( new Chunk( chunkList[1], 'top' ) );
 
 createObject( 0, 0, 20, 20, '#F00', 'test' );
 createObject( 250, 250, 20, 20, '#0F0', 'test' );
-createObject( 500, 500, 20, 20, '#00F', 'test' );
+createObject( 480, 480, 20, 20, '#00F', 'test' );
 
 setInterval( visualistationSystem, 15 );

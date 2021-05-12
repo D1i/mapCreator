@@ -22,6 +22,11 @@ class C_DEBUG {
             IS_INIT: false
         },
         this._FUNC = {
+            SHOW_CHUNC: () => {
+                chunkList.forEach(( i ) => {
+                    createObject(i.to.x - chunkSize, i.to.y - chunkSize, chunkSize, chunkSize, '#0000FF0f', 'visualisation chunk');
+                })
+            },
             RERENDER: () => {
                 if ( this._STATE.elemText.x !== screenPosition.x ) {
                     this._STATE.elemText.x = screenPosition.x;
@@ -90,5 +95,7 @@ const DEBUG = new C_DEBUG();
 
 
 DEBUG._FUNC.INIT_DEBG_SCREEN();
+
+DEBUG._FUNC.SHOW_CHUNC();
 
 setInterval( DEBUG._FUNC.RERENDER, 100 );
