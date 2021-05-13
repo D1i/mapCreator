@@ -108,7 +108,8 @@ const DEBUG = new C_DEBUG();
 
 
 DEBUG._FUNC.INIT_DEBG_SCREEN();
-
 DEBUG._FUNC.SHOW_CHUNK();
+
+// setTimeout( DEBUG._FUNC.SHOW_CHUNK, 1000 );
 
 setInterval( DEBUG._FUNC.RERENDER, 100 );
