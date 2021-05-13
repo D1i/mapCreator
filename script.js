@@ -86,46 +86,6 @@ class Chunk {
             neighboringChunk.from = { x: '-', y: '-' }
             neighboringChunk.to = { x: '-', y: '-' }
         }
-
-        //IS DEBUG MODE
-        // console.log( `
-        //
-        //
-        //
-        // ++++++++++++++++++++++++++++++++++++++
-        //                 X: ${neighboringChunk.to.x} Y: ${neighboringChunk.to.y}
-        // ---------------0
-        // |              |
-        // |              |
-        // |              |
-        // |              |
-        // |              |
-        // 0---------------
-        // X: ${neighboringChunk.from.x} Y: ${neighboringChunk.from.y}
-        //
-        //
-        //
-        // ======================================
-        // TYPE: ${directionCreated}
-        // ======================================
-        //
-        //
-        //
-        //                 X: ${this.to.x} Y: ${this.to.y}
-        // ---------------0
-        // |              |
-        // |              |
-        // |              |
-        // |              |
-        // |              |
-        // 0---------------
-        // X: ${this.from.x} Y: ${this.from.y}
-        // ++++++++++++++++++++++++++++++++++++++
-        //
-        //
-        //
-        // ` )
-
     }
 
     directionCreatedTop = ( neighboringChunk ) => {
