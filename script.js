@@ -308,7 +308,6 @@ function generateRouteByChunksForObject (x, y, width, height) {
     
     const genNeedChunk = () => {
         while (true) {
-            console.log(moveIn);
             if (moveIn.x === 'N' && moveIn.y === 'N') {
                 return currentChunk;
                 break;
