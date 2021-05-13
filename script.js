@@ -313,9 +313,6 @@ function generateRouteByChunksForObject (x, y, width, height) {
                 return currentChunk;
                 break;
             }
-            if (currentChunk.to.y === -19000) {
-                debugger
-            }
             if (moveIn.x === 'S' || moveIn.y === 'S') {
                 moveIn.x = (x > currentChunk.from.x && x > currentChunk.to.x) ? 'P' : (x < currentChunk.from.x && x < currentChunk.to.x) ? 'M' : 'N';
                 moveIn.y = (y > currentChunk.from.y && y > currentChunk.to.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.to.y) ? 'M' : 'N';
