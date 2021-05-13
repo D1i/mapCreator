@@ -313,13 +313,18 @@ function generateRouteByChunksForObject (x, y, width, height) {
                 return currentChunk;
                 break;
             }
+            if (currentChunk.to.y === -19000) {
+                debugger
+            }
             if (moveIn.x === 'S' || moveIn.y === 'S') {
-                moveIn.x = (x > currentChunk.from.x && x > currentChunk.from.x) ? 'P' : (x < currentChunk.from.x && x < currentChunk.from.x) ? 'M' : 'N';
-                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
-            } else if (moveIn.x === 'N') {
-                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
-            } else if (moveIn.Y === 'N') {
-                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
+                moveIn.x = (x > currentChunk.from.x && x > currentChunk.to.x) ? 'P' : (x < currentChunk.from.x && x < currentChunk.to.x) ? 'M' : 'N';
+                moveIn.y = (y > currentChunk.from.y && y > currentChunk.to.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.to.y) ? 'M' : 'N';
+            }
+            if (moveIn.x !== 'N') {
+                moveIn.x = (x > currentChunk.from.x && x > currentChunk.to.x) ? 'P' : (x < currentChunk.from.x && x < currentChunk.to.x) ? 'M' : 'N';
+            }
+            if (moveIn.y !== 'N') {
+                moveIn.y = (y > currentChunk.from.y && y > currentChunk.to.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.to.y) ? 'M' : 'N';
             }
             if (moveIn.x !== 'N' && moveIn.x === 'P') {
                 currentChunk = generateChunk(currentChunk, 'right');
@@ -338,14 +343,19 @@ function generateRouteByChunksForObject (x, y, width, height) {
 
 }
 
-generateChunk( chunkList[0], 'left' );
-generateChunk( chunkList[0], 'right' );
-generateChunk( chunkList[0], 'top' );
-generateChunk( chunkList[0], 'bottom' );
-generateChunk( chunkList[1], 'top' );
-generateChunk( chunkList[1], 'bottom' );
-generateChunk( chunkList[2], 'top' );
-generateChunk( chunkList[2], 'bottom' );
+function TEST_CHUNK_AUTO_ROUTS() {
+    generateRouteByChunksForObject(0,-20000,100, 100)
+    generateRouteByChunksForObject(0,20000,100, 100)
+    generateRouteByChunksForObject(20000,0,100, 100)
+    generateRouteByChunksForObject(-20000,0,100, 100)
+
+    generateRouteByChunksForObject(20000,20000,100, 100)
+    generateRouteByChunksForObject(-20000,20000,100, 100)
+    generateRouteByChunksForObject(-20000,-20000,100, 100)
+    generateRouteByChunksForObject(20000,-20000,100, 100)
+}
+
+TEST_CHUNK_AUTO_ROUTS()
 
 addCalibrationDrawing();
 
