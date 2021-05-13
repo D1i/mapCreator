@@ -62,11 +62,25 @@ window.addEventListener( 'resize', () => {
     screenPosition.scale = Math.floor( ( screenSize.width + screenSize.height ) / 100 );
 } )
 
+function findChunkByCoordinates( x, y ) {
+    return chunkList.find( ( i ) => {
+        return (
+            i.from.x <= x && i.to.x >= x &&
+            i.from.y <= y && i.to.y >= y
+        )
+    } )
+}
 class Chunk {
     constructor( neighboringChunk, directionCreated ) {
         this.from = { x: 0, y: 0 };
         this.to = { x: chunkSize, y: chunkSize };
         this.objectList = [];
+        this.neighboringChunks = {
+            top: null,
+            left: null,
+            bottom: null,
+            right: null
+        }
 
         if ( directionCreated === 'top' ) {
             this.directionCreatedTop( neighboringChunk );
@@ -91,21 +105,53 @@ class Chunk {
     directionCreatedTop = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.from.x, y: neighboringChunk.from.y + chunkSize };
         this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y + chunkSize };
+        // this.addNeighboringChunk( neighboringChunk, 'bottom' );
     }
 
     directionCreatedLeft = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.from.x - chunkSize, y: neighboringChunk.from.y };
         this.to = { x: neighboringChunk.to.x - chunkSize, y: neighboringChunk.to.y };
+        // this.addNeighboringChunk( neighboringChunk, 'right' );
     }
 
     directionCreatedBottom = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.from.x, y: neighboringChunk.from.y - chunkSize };
         this.to = { x: neighboringChunk.to.x, y: neighboringChunk.to.y - chunkSize };
+        // this.addNeighboringChunk( neighboringChunk, 'top' );
     }
 
     directionCreatedRight = ( neighboringChunk ) => {
         this.from = { x: neighboringChunk.from.x + chunkSize, y: neighboringChunk.from.y };
         this.to = { x: neighboringChunk.to.x + chunkSize, y: neighboringChunk.to.y };
+        // this.addNeighboringChunk( neighboringChunk, 'right' );
+    }
+
+    addNeighboringChunk = ( neighboringChunk, directionCreated ) => {
+        this.neighboringChunks[directionCreated] = neighboringChunk;
+        //Используйте при новых генерации соседних чаноков для дополнения списка соседей
+    }
+
+    hasNeighboringChunk = (directionCreated) => {
+        return !!this.neighboringChunks[directionCreated];
+    }
+
+    setNeiFromChunks = () => {
+        const center = {
+            x: this.from.x + chunkSize / 2,
+            y: this.from.y + chunkSize / 2
+        }
+
+        this.neighboringChunks = {
+            top: findChunkByCoordinates( center.x, center.y + chunkSize ),
+            left: findChunkByCoordinates( center.x - chunkSize, center.y ),
+            bottom: findChunkByCoordinates( center.x, center.y - chunkSize ),
+            right: findChunkByCoordinates( center.x + chunkSize, center.y )
+        }
+
+        this.neighboringChunks.top && (this.neighboringChunks.top.neighboringChunks.bottom = this);
+        this.neighboringChunks.left && (this.neighboringChunks.left.neighboringChunks.right = this);
+        this.neighboringChunks.bottom && (this.neighboringChunks.bottom.neighboringChunks.top = this);
+        this.neighboringChunks.right && (this.neighboringChunks.right.neighboringChunks.left = this);
     }
 
     addObject = ( object ) => {
@@ -199,14 +245,44 @@ function addCalibrationDrawing() {
 }
 
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
-chunkList.push( new Chunk( chunkList[0], 'top' ) );//1
-chunkList.push( new Chunk( chunkList[0], 'left' ) );//2
-chunkList.push( new Chunk( chunkList[0], 'bottom' ) );//3
-chunkList.push( new Chunk( chunkList[0], 'right' ) );//4
-chunkList.push( new Chunk( chunkList[4], 'bottom' ) );//5
-chunkList.push( new Chunk( chunkList[4], 'top' ) );//6
-chunkList.push( new Chunk( chunkList[2], 'bottom' ) );//7
-chunkList.push( new Chunk( chunkList[2], 'top' ) );//8
+
+function generateChunk( neighboringChunk, directionCreated ) {
+    if (neighboringChunk.hasNeighboringChunk( directionCreated )) return false;
+    const newChunk = new Chunk( neighboringChunk, directionCreated );
+    // neighboringChunk.addNeighboringChunk( newChunk, directionCreated );
+    chunkList.push( newChunk );
+    return true;
+}
+
+function generatChunksToObject( object ) {
+    for (let genComplite = false; genComplite !== true;) {
+        if ( chunkList[0].from.x > object.x - object.width / 2 || chunkList[0].to.x > object.x + object.width / 2 ) {
+            
+        } else if ( chunkList[0].from.y > object.y - object.height / 2 || chunkList[0].to.y > object.y + object.height / 2 ) {
+
+        } else {
+            genComplite = false;
+        }
+    }
+    chunkList[0]
+}
+
+function setNeiFromChunks () {
+    chunkList.forEach(i => {
+        i.setNeiFromChunks();
+    })
+}
+
+setNeiFromChunks();//ВО
+
+generateChunk( chunkList[0], 'left' );
+generateChunk( chunkList[0], 'right' );
+generateChunk( chunkList[0], 'top' );
+generateChunk( chunkList[0], 'bottom' );
+generateChunk( chunkList[1], 'top' );
+generateChunk( chunkList[1], 'bottom' );
+generateChunk( chunkList[2], 'top' );
+generateChunk( chunkList[2], 'bottom' );
 
 addCalibrationDrawing();
 
