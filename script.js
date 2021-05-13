@@ -247,11 +247,16 @@ function addCalibrationDrawing() {
 chunkList.push( new Chunk( 'init chunk', 'init chunk' ) );
 
 function generateChunk( neighboringChunk, directionCreated ) {
-    if (neighboringChunk.hasNeighboringChunk( directionCreated )) return false;
+    if (neighboringChunk === 'init chunk') return;
+    try {
+        if (neighboringChunk.hasNeighboringChunk( directionCreated )) return 'error';
+    } catch {
+        debugger
+    }
     const newChunk = new Chunk( neighboringChunk, directionCreated );
     // neighboringChunk.addNeighboringChunk( newChunk, directionCreated );
     chunkList.push( newChunk );
-    return true;
+    return newChunk;
 }
 
 function generatChunksToObject( object ) {
@@ -274,6 +279,64 @@ function setNeiFromChunks () {
 }
 
 setNeiFromChunks();//ВО
+
+function generateRouteByChunksForObject (x, y, width, height) {
+    let chunkTarget = null;
+    const chunkDirection = {
+        x: true,
+        y: true
+    };
+    
+    if (chunkDirection.x < 0) {
+        chunkDirection.x = false;
+    }
+    if (chunkDirection.y < 0) {
+        chunkDirection.y = false;
+    }
+
+    chunkTarget = findChunkByCoordinates(x, y)
+
+
+    if (chunkTarget) return chunkTarget;
+    
+    let iterator = 0;
+    const moveIn = {
+        x: 'S',
+        y: 'S'
+    };
+    let currentChunk = chunkList[0];
+    
+    const genNeedChunk = () => {
+        while (true) {
+            console.log(moveIn);
+            if (moveIn.x === 'N' && moveIn.y === 'N') {
+                return currentChunk;
+                break;
+            }
+            if (moveIn.x === 'S' || moveIn.y === 'S') {
+                moveIn.x = (x > currentChunk.from.x && x > currentChunk.from.x) ? 'P' : (x < currentChunk.from.x && x < currentChunk.from.x) ? 'M' : 'N';
+                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
+            } else if (moveIn.x === 'N') {
+                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
+            } else if (moveIn.Y === 'N') {
+                moveIn.y = (y > currentChunk.from.y && x > currentChunk.from.y) ? 'P' : (y < currentChunk.from.y && y < currentChunk.from.y) ? 'M' : 'N';
+            }
+            if (moveIn.x !== 'N' && moveIn.x === 'P') {
+                currentChunk = generateChunk(currentChunk, 'right');
+            } else if (moveIn.x !== 'N') {
+                currentChunk = generateChunk(currentChunk, 'left');
+            }
+            if (moveIn.y !== 'N' && moveIn.y === 'P') {
+                currentChunk = generateChunk(currentChunk, 'top');
+            } else if (moveIn.y !== 'N') {
+                currentChunk = generateChunk(currentChunk, 'bottom');
+            }
+        }
+    }
+
+    return genNeedChunk();
+
+}
 
 generateChunk( chunkList[0], 'left' );
 generateChunk( chunkList[0], 'right' );
