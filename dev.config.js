@@ -7,7 +7,7 @@ module.exports = {
       script: "./app.js",
     },
     plugins: [
-      new HtmlWebpackPlugin(),
+      new HtmlWebpackPlugin()
     ],
     output: {
         path: path.resolve(__dirname, "./build"),
@@ -31,6 +31,9 @@ module.exports = {
     devServer: {
         contentBase: path.join(__dirname, 'build'),
         compress: true,
-        port: 9000,
-      }
+        open: true,
+        hot: true,
+        overlay: true,
+        port: 4310
+    }
 }

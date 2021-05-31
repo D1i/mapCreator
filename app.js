@@ -1,5 +1,3 @@
-// import {} from './src'
-
-const test = true;
+import { Menu } from "./src"
 
 export default test;
